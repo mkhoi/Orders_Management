@@ -24,6 +24,17 @@ namespace Orders_management
             btnUpdate.Hide();
         }
 
+        public AddOrUpdateOrder(int id)
+        {
+            InitializeComponent();
+            Order order = db.Orders.Where(x => x.ID == id).Select(x => x).FirstOrDefault();
+            Id = id;
+            txtName.Text = order.Name;
+            txtTotal.Text = order.Total.ToString();
+            lblCreateOrderDate.Text = DateTime.Today.ToString();
+            btnSave.Hide();
+        }
+
         private void AddOrUpdateOrder_Load(object sender, EventArgs e)
         {
             lblCreateOrderDate.Text = DateTime.Today.ToString();
@@ -64,6 +75,24 @@ namespace Orders_management
             if (txtTotal.Text == "") { return true; }
             if (!int.TryParse(txtTotal.Text, out number)) { return true; }
             return false;
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (sai())
+            {
+                MessageBox.Show("Xin vui long kiem tra lai", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {        
+                Order _order = db.Orders.Where(x => x.ID == Id).Select(x => x).FirstOrDefault();
+                _order.Name = txtName.Text;
+                _order.Total = Convert.ToInt32(txtTotal.Text);
+                _order.Date = Convert.ToDateTime(lblCreateOrderDate.Text);
+                db.SaveChanges();
+                orderManagement.ReloadData();
+                this.Close();
+            }
         }
     }
 }
