@@ -147,6 +147,7 @@
             this.btnAddItem.TabIndex = 9;
             this.btnAddItem.Text = "Add Item";
             this.btnAddItem.UseVisualStyleBackColor = true;
+            this.btnAddItem.Click += new System.EventHandler(this.btnAddItem_Click);
             // 
             // btnCancel
             // 

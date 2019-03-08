@@ -54,6 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddOrUpdateItem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddOrUpdateItem.Designer.cs">
+      <DependentUpon>AddOrUpdateItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="AddOrUpdateOrder.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -76,6 +82,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddOrUpdateItem.resx">
+      <DependentUpon>AddOrUpdateItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AddOrUpdateOrder.resx">
       <DependentUpon>AddOrUpdateOrder.cs</DependentUpon>
     </EmbeddedResource>

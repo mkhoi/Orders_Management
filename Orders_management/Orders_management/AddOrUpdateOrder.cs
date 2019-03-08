@@ -17,11 +17,11 @@ namespace Orders_management
         public int Id = 0;
         DatabaseContext db = new DatabaseContext();
 
-        public delegate void Created(OrderManagement management);
-        public event Created onCreated = null;
+        public delegate void _Created(OrderManagement management);
+        public event _Created onCreated = null;
 
-        public delegate void Updated(OrderManagement management);
-        public event Updated onUpdated = null;
+        public delegate void _Updated(OrderManagement management);
+        public event _Updated onUpdated = null;
 
         public OrderManagement orderManagement;
 
@@ -114,6 +114,14 @@ namespace Orders_management
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnAddItem_Click(object sender, EventArgs e)
+        {
+            AddOrUpdateItem AddItem = new AddOrUpdateItem();
+            AddItem.addOrUpdateOrder = this;
+
+            AddItem.Show();
         }
     }
 }
