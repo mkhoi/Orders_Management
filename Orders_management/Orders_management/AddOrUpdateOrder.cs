@@ -16,6 +16,13 @@ namespace Orders_management
     {
         public int Id = 0;
         DatabaseContext db = new DatabaseContext();
+
+        public delegate void Created(OrderManagement management);
+        public event Created onCreated = null;
+
+        public delegate void Updated(OrderManagement management);
+        public event Updated onUpdated = null;
+
         public OrderManagement orderManagement;
 
         public AddOrUpdateOrder()
@@ -49,11 +56,15 @@ namespace Orders_management
             }
             else
             {
-                Order order = GetOrderMasterInfo();
-                db.Orders.Add(order);
-                db.SaveChanges();
-                orderManagement.ReloadData();
-                this.Close();
+                if(onCreated != null)
+                { 
+                    Order order = GetOrderMasterInfo();
+                    db.Orders.Add(order);
+                    db.SaveChanges();
+                    onCreated(orderManagement);
+                   
+                    this.Close();
+                }
             }
         }
 
@@ -85,14 +96,18 @@ namespace Orders_management
                 MessageBox.Show("Xin vui long kiem tra lai", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
-            {        
-                Order _order = db.Orders.Where(x => x.ID == Id).Select(x => x).FirstOrDefault();
-                _order.Name = txtName.Text;
-                _order.Total = Convert.ToInt32(txtTotal.Text);
-                _order.Date = Convert.ToDateTime(lblCreateOrderDate.Text);
-                db.SaveChanges();
-                orderManagement.ReloadData();
-                this.Close();
+            {
+                if (onUpdated != null)
+                {
+                    Order _order = db.Orders.Where(x => x.ID == Id).Select(x => x).FirstOrDefault();
+                    _order.Name = txtName.Text;
+                    _order.Total = Convert.ToInt32(txtTotal.Text);
+                    _order.Date = Convert.ToDateTime(lblCreateOrderDate.Text);
+                    db.SaveChanges();
+                    onUpdated(orderManagement);
+                    
+                    this.Close();
+                }      
             }
         }
 

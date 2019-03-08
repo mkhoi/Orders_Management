@@ -25,7 +25,7 @@ namespace Orders_management
             ReloadData();
         }
 
-        public void ReloadData()
+        private void ReloadData()
         {
             DatabaseContext db = new DatabaseContext();
             dataGridView1.DataSource = db.Orders.ToList();
@@ -42,7 +42,13 @@ namespace Orders_management
         {
             AddOrUpdateOrder addOrder = new AddOrUpdateOrder();
             addOrder.orderManagement = this;
+            addOrder.onCreated += AddOrder_onCreated;
             addOrder.Show();
+        }
+
+        private void AddOrder_onCreated(OrderManagement management)
+        {
+            management.ReloadData();
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -51,7 +57,13 @@ namespace Orders_management
 
             AddOrUpdateOrder updateOrder = new AddOrUpdateOrder(id);
             updateOrder.orderManagement = this;
+            updateOrder.onUpdated += UpdateOrder_onUpdated;
             updateOrder.Show();
+        }
+
+        private void UpdateOrder_onUpdated(OrderManagement management)
+        {
+            management.ReloadData();
         }
 
         private void btnDeleteOrder_Click(object sender, EventArgs e)
