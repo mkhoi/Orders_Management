@@ -21,6 +21,7 @@ namespace Orders_management
         public AddOrUpdateOrder()
         {
             InitializeComponent();
+            lblCreateOrderDate.Text = DateTime.Today.ToString();
             btnUpdate.Hide();
         }
 

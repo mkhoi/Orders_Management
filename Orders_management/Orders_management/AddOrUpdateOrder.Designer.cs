@@ -111,7 +111,6 @@
             this.lblCreateOrderDate.Name = "lblCreateOrderDate";
             this.lblCreateOrderDate.Size = new System.Drawing.Size(0, 13);
             this.lblCreateOrderDate.TabIndex = 6;
-            this.lblCreateOrderDate.Visible = false;
             // 
             // dataGridView1
             // 
