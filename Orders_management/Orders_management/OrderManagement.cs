@@ -13,6 +13,8 @@ namespace Orders_management
 {
     public partial class OrderManagement : Form
     {
+        DatabaseContext db = new DatabaseContext();
+
         public OrderManagement()
         {
             InitializeComponent();
@@ -20,8 +22,12 @@ namespace Orders_management
 
         private void OrderManagement_Load(object sender, EventArgs e)
         {
-            DatabaseContext db = new DatabaseContext();
-            dataGridView1.DataSource = db.Orders.ToString();
+            ReloadData();
+        }
+
+        public void ReloadData()
+        {
+            dataGridView1.DataSource = db.Orders.ToList();
         }
 
         private void dataGridView1_SizeChanged(object sender, EventArgs e)
@@ -33,7 +39,9 @@ namespace Orders_management
 
         private void btnAddOrder_Click(object sender, EventArgs e)
         {
-
+            AddOrUpdateOrder addOrder = new AddOrUpdateOrder();
+            addOrder.orderManagement = this;
+            addOrder.Show();
         }
     }
 }
