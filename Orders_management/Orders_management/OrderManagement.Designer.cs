@@ -71,6 +71,7 @@
             this.btnDeleteOrder.TabIndex = 1;
             this.btnDeleteOrder.Text = "Delete Order";
             this.btnDeleteOrder.UseVisualStyleBackColor = true;
+            this.btnDeleteOrder.Click += new System.EventHandler(this.btnDeleteOrder_Click);
             // 
             // btnAddOrder
             // 

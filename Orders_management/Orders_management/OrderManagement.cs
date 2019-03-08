@@ -53,5 +53,22 @@ namespace Orders_management
             updateOrder.orderManagement = this;
             updateOrder.Show();
         }
+
+        private void btnDeleteOrder_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure delete this Order?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.No)
+            {
+                return;
+            }
+
+            int id = int.Parse(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+            using (DatabaseContext db = new DatabaseContext())
+            {
+                Order order = db.Orders.Where(x => x.ID == id).Select(x => x).FirstOrDefault();
+                db.Orders.Remove(order);
+                db.SaveChanges();
+                ReloadData();
+            }
+        }
     }
 }
