@@ -128,7 +128,7 @@ namespace Orders_management
         private void btnAddItem_Click(object sender, EventArgs e)
         {
             AddOrUpdateItem AddItem = new AddOrUpdateItem();
-            AddItem.addOrUpdateOrder = this;
+            //AddItem.addOrUpdateOrder = this;
             AddItem.onCreated += AddItem_onCreated;
             AddItem.Show();
         }
@@ -148,6 +148,28 @@ namespace Orders_management
         {
             DatabaseContext db = new DatabaseContext();
             dataGridView1.DataSource = db.Items.ToList();
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int id = int.Parse(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+            Item item = items.Where(x => x.ItemID == id).Select(x => x).FirstOrDefault();
+
+            AddOrUpdateItem UpdateItem = new AddOrUpdateItem(item);
+            //AddItem.addOrUpdateOrder = this;
+           
+            UpdateItem.Show();
+            UpdateItem.onUpdated += UpdateItem_onUpdated;
+        }
+
+        private void UpdateItem_onUpdated(Item item)
+        {
+            Item _item = items.Where(x => x.ItemID == item.ItemID).Select(x => x).FirstOrDefault();
+            _item.ItemName = item.ItemName;
+            _item.Price = item.Price;
+            _item.Qty = item.Qty;
+
+            dataGridView1.Refresh();
         }
     }
 }

@@ -16,19 +16,31 @@ namespace Orders_management
         public int Id = 0;
         
         DatabaseContext db = new DatabaseContext();
-        public AddOrUpdateOrder addOrUpdateOrder;
-        //List<Item> items = new List<Item>();
+        //public AddOrUpdateOrder addOrUpdateOrder;
+        
 
         public delegate void _Created(Item item);
         public event _Created onCreated = null;
 
-        public delegate void _Updated(AddOrUpdateOrder addOrUpdate);
+        public delegate void _Updated(Item item);
         public event _Updated onUpdated = null;
 
         public AddOrUpdateItem()
         {
             InitializeComponent();
             btnUpdate.Hide();
+        }
+
+        public AddOrUpdateItem(Item item)
+        {
+            InitializeComponent();
+            //Item item = items.Where(x => x.ItemID == id).Select(x => x).FirstOrDefault();
+            Id = item.ItemID;
+            txtItemName.Text = item.ItemName;
+            txtPrice.Text = item.Price.ToString();
+            txtQuantity.Text = item.Qty.ToString();
+
+            btnSave.Hide();
         }
 
         private void AddOrUpdateItem_Load(object sender, EventArgs e)
@@ -47,14 +59,6 @@ namespace Orders_management
                 if (onCreated != null)
                 {
                     Item item = GetItemInfo();
-                    
-                   // items.Add(item);
-                    /*BindingList<Item> bindingList = new BindingList<Item>(items);
-                    BindingSource source = new BindingSource(bindingList, null);
-                    datagri.DataSource = source;
-                    dataGridView2.Refresh();*/
-                    //db.Items.Add(item);
-                    //db.SaveChanges();
                     onCreated(item);
                     
                     this.Close();
@@ -65,8 +69,7 @@ namespace Orders_management
         private Item GetItemInfo()
         {
             Item item = new Item();
-
-            //item.ItemID = Id;
+            item.ItemID = Id;
             item.ItemName = txtItemName.Text;
             item.Price = Convert.ToInt32(txtPrice.Text);
             item.Qty = Convert.ToInt32(txtQuantity.Text);
@@ -83,6 +86,24 @@ namespace Orders_management
             if (!int.TryParse(txtPrice.Text, out number)) { return true; }
             if (!int.TryParse(txtQuantity.Text, out number)) { return true; }
             return false;
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (sai())
+            {
+                MessageBox.Show("Xin vui long kiem tra lai", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                if (onUpdated != null)
+                {
+                    Item item = GetItemInfo();
+                    onUpdated(item);
+
+                    this.Close();
+                }
+            }
         }
     }
 }
