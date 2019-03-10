@@ -49,6 +49,7 @@ namespace Orders_management
         private void AddOrder_onCreated(OrderManagement management)
         {
             management.ReloadData();
+            
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

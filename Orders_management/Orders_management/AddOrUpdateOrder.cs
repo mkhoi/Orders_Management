@@ -15,6 +15,7 @@ namespace Orders_management
     public partial class AddOrUpdateOrder : Form
     {
         public int Id = 0;
+        public int itemId = 1;
         DatabaseContext db = new DatabaseContext();
 
         public delegate void _Created(OrderManagement management);
@@ -23,6 +24,7 @@ namespace Orders_management
         public delegate void _Updated(OrderManagement management);
         public event _Updated onUpdated = null;
 
+        List<Item> items = new List<Item>();
         public OrderManagement orderManagement;
 
         public AddOrUpdateOrder()
@@ -58,9 +60,12 @@ namespace Orders_management
             {
                 if(onCreated != null)
                 { 
-                    Order order = GetOrderMasterInfo();
+                    Order order = GetOrderInfo();
+                    DatabaseContext db = new DatabaseContext();
+                    db.Items.AddRange(items);
                     db.Orders.Add(order);
                     db.SaveChanges();
+                    
                     onCreated(orderManagement);
                    
                     this.Close();
@@ -68,7 +73,7 @@ namespace Orders_management
             }
         }
 
-        private Order GetOrderMasterInfo()
+        private Order GetOrderInfo()
         {
             Order order = new Order();
 
@@ -76,7 +81,11 @@ namespace Orders_management
             order.Name = txtName.Text;
             order.Total = Convert.ToInt32(txtTotal.Text);
             order.Date = Convert.ToDateTime(lblCreateOrderDate.Text);
-
+            foreach (Item item in items)
+            {
+                item.OrderId = order.ID;
+            }
+            
             return order;
         }
 
@@ -120,8 +129,25 @@ namespace Orders_management
         {
             AddOrUpdateItem AddItem = new AddOrUpdateItem();
             AddItem.addOrUpdateOrder = this;
-
+            AddItem.onCreated += AddItem_onCreated;
             AddItem.Show();
+        }
+
+        private void AddItem_onCreated(Item item)
+        {
+            item.ItemID = itemId;
+            items.Add(item);
+            BindingList<Item> bindingList = new BindingList<Item>(items);
+            BindingSource source = new BindingSource(bindingList, null);
+            dataGridView1.DataSource = source;
+            dataGridView1.Refresh();
+            itemId++;
+        }
+
+        private void ReloadData()
+        {
+            DatabaseContext db = new DatabaseContext();
+            dataGridView1.DataSource = db.Items.ToList();
         }
     }
 }
