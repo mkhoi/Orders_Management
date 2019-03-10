@@ -171,5 +171,20 @@ namespace Orders_management
 
             dataGridView1.Refresh();
         }
+
+        private void btnDeleteItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure delete this Item?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.No)
+            {
+                return;
+            }
+            int id = int.Parse(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+            Item item = items.Where(x => x.ItemID == id).Select(x => x).FirstOrDefault();
+            items.Remove(item);
+            BindingList<Item> bindingList = new BindingList<Item>(items);
+            BindingSource source = new BindingSource(bindingList, null);
+            dataGridView1.DataSource = source;
+            dataGridView1.Refresh();
+        }
     }
 }
