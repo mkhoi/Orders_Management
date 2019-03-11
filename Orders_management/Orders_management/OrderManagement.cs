@@ -65,6 +65,7 @@ namespace Orders_management
         private void UpdateOrder_onUpdated(OrderManagement management)
         {
             management.ReloadData();
+            
         }
 
         private void btnDeleteOrder_Click(object sender, EventArgs e)

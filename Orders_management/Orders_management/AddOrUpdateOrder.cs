@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Orders_management.Model;
+using System.Data.Entity;
 
 
 namespace Orders_management
@@ -16,6 +17,7 @@ namespace Orders_management
     {
         public int Id = 0;
         public int itemId = 1;
+        public int temp;
         DatabaseContext db = new DatabaseContext();
 
         public delegate void _Created(OrderManagement management);
@@ -25,6 +27,7 @@ namespace Orders_management
         public event _Updated onUpdated = null;
 
         List<Item> items = new List<Item>();
+        public Item deletedItem = new Item();
         public OrderManagement orderManagement;
 
         public AddOrUpdateOrder()
@@ -42,6 +45,7 @@ namespace Orders_management
             txtName.Text = order.Name;
             txtTotal.Text = order.Total.ToString();
             lblCreateOrderDate.Text = DateTime.Today.ToString();
+          
             items = order.Items;
 
             BindingList<Item> bindingList = new BindingList<Item>(items);
@@ -122,9 +126,10 @@ namespace Orders_management
                     _order.Date = Convert.ToDateTime(lblCreateOrderDate.Text);
                     _order.Items.AddRange(items);
                     db.SaveChanges();
+
                     onUpdated(orderManagement);
-                    
                     this.Close();
+                    
                 }      
             }
         }
@@ -137,7 +142,7 @@ namespace Orders_management
         private void btnAddItem_Click(object sender, EventArgs e)
         {
             AddOrUpdateItem AddItem = new AddOrUpdateItem();
-            //AddItem.addOrUpdateOrder = this;
+           
             AddItem.onCreated += AddItem_onCreated;
             AddItem.Show();
         }
@@ -165,8 +170,7 @@ namespace Orders_management
             Item item = items.Where(x => x.ItemID == id).Select(x => x).FirstOrDefault();
 
             AddOrUpdateItem UpdateItem = new AddOrUpdateItem(item);
-            //AddItem.addOrUpdateOrder = this;
-           
+
             UpdateItem.Show();
             UpdateItem.onUpdated += UpdateItem_onUpdated;
         }
@@ -187,13 +191,30 @@ namespace Orders_management
             {
                 return;
             }
+
             int id = int.Parse(dataGridView1.CurrentRow.Cells[0].Value.ToString());
             Item item = items.Where(x => x.ItemID == id).Select(x => x).FirstOrDefault();
+           
             items.Remove(item);
             BindingList<Item> bindingList = new BindingList<Item>(items);
             BindingSource source = new BindingSource(bindingList, null);
             dataGridView1.DataSource = source;
             dataGridView1.Refresh();
+
+            Item tempItem = db.Items.Where(x => x.ItemID == id).Select(x => x).FirstOrDefault();
+            if (tempItem != null)
+            {
+                temp = id;
+                tempItem.OrderId = 0;
+                tempItem.Order = null;
+                deletedItem = tempItem;
+                db.Items.Remove(deletedItem);
+                db.SaveChanges();
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }

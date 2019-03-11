@@ -16,8 +16,6 @@ namespace Orders_management
         public int Id = 0;
         
         DatabaseContext db = new DatabaseContext();
-        //public AddOrUpdateOrder addOrUpdateOrder;
-        
 
         public delegate void _Created(Item item);
         public event _Created onCreated = null;
@@ -34,7 +32,6 @@ namespace Orders_management
         public AddOrUpdateItem(Item item)
         {
             InitializeComponent();
-            //Item item = items.Where(x => x.ItemID == id).Select(x => x).FirstOrDefault();
             Id = item.ItemID;
             txtItemName.Text = item.ItemName;
             txtPrice.Text = item.Price.ToString();
