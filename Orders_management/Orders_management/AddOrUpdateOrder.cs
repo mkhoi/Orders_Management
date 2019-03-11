@@ -42,6 +42,14 @@ namespace Orders_management
             txtName.Text = order.Name;
             txtTotal.Text = order.Total.ToString();
             lblCreateOrderDate.Text = DateTime.Today.ToString();
+            items = order.Items;
+
+            BindingList<Item> bindingList = new BindingList<Item>(items);
+            BindingSource source = new BindingSource(bindingList, null);
+            dataGridView1.DataSource = source;
+           
+            dataGridView1.Refresh();
+            
             btnSave.Hide();
         }
 
@@ -112,6 +120,7 @@ namespace Orders_management
                     _order.Name = txtName.Text;
                     _order.Total = Convert.ToInt32(txtTotal.Text);
                     _order.Date = Convert.ToDateTime(lblCreateOrderDate.Text);
+                    _order.Items.AddRange(items);
                     db.SaveChanges();
                     onUpdated(orderManagement);
                     
